@@ -7,6 +7,7 @@ echo "🚀 Container Started..."
 # Menyalakan cron daemon di background
 echo "⏰ Starting Cron Service..."
 service cron start
+
 # -----------------------------------
 
 # Cek apakah Opencode terinstall
