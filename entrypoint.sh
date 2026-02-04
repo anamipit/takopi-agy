@@ -3,6 +3,12 @@ set -e
 
 echo "🚀 Container Started..."
 
+# --- [UPDATE] Start Cron Service ---
+# Menyalakan cron daemon di background
+echo "⏰ Starting Cron Service..."
+service cron start
+# -----------------------------------
+
 # Cek apakah Opencode terinstall
 if ! command -v opencode &> /dev/null; then
     echo "❌ CRITICAL: Opencode CLI tidak ditemukan!"
@@ -14,7 +20,7 @@ if [ ! -d "/opt/auth-plugin" ]; then
     echo "⚠️ Warning: Plugin folder not found."
 fi
 
-# Cek Status Login (Indikator kasar: folder antigravity-accounts)
+# Cek Status Login
 AUTH_FILE="$XDG_DATA_HOME/opencode/antigravity-accounts.json"
 if [ ! -f "$AUTH_FILE" ]; then
     echo "=========================================================="
@@ -26,8 +32,6 @@ if [ ! -f "$AUTH_FILE" ]; then
     echo "    opencode auth login"
     echo "=========================================================="
     
-    # Kita sleep infinity agar container tidak mati, memberi Anda waktu login
-    # Setelah login sukses, Anda bisa restart container manual via Dokploy
     if [ "$1" != "force-start" ]; then
         echo "💤 Menunggu Anda login manual... (Container standby)"
         exec sleep infinity
@@ -37,5 +41,4 @@ else
 fi
 
 # Jalankan Takopi
-# Pastikan token telegram ada di environment variable Dokploy
 exec takopi -- opencode
