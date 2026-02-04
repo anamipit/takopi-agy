@@ -9,12 +9,15 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
-# 1. Install dependencies
+# 1. Install dependencies + CRON
+# Tambahkan 'cron' dan 'nano' agar agent bisa memanipulasi job scheduling
 RUN apt-get update && apt-get install -y \
     curl \
     git \
     unzip \
     build-essential \
+    cron \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install Node.js (Versi 22.x)
@@ -30,15 +33,11 @@ ENV PATH="/root/.bun/bin:$PATH"
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN pip install --no-cache-dir git+https://github.com/banteg/takopi.git
 
-# 5. Install Opencode CLI
+# 5. Install Opencode CLI & PI Agent
 RUN npm install -g opencode-ai@latest
-# 5a. Install PI coding agent
 RUN npm install -g @mariozechner/pi-coding-agent
 
-
 # 6. Install Plugin Auth Antigravity (FIXED)
-# Kita HAPUS "bun run build" karena script itu tidak ada di repo plugin.
-# Cukup install dependencies saja.
 RUN git clone https://github.com/shekohex/opencode-google-antigravity-auth.git /opt/auth-plugin \
     && cd /opt/auth-plugin \
     && bun install
