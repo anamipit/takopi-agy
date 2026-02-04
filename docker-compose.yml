@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  takopi-agent:
+    # Build menggunakan Dockerfile di folder yang sama
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: takopi-antigravity:latest
+    container_name: takopi-agent
+    restart: unless-stopped
+    
+    # Environment Variables Wajib
+    environment:
+      - TELEGRAM_BOT_TOKEN=xxxxxxxxxx:xxxxxxxxxxxxxxxxx  # Ganti dengan token BotFather
+      - TELEGRAM_ALLOWED_USERS=123456789                # Ganti dengan ID Telegram Anda
+      - TZ=Asia/Jakarta                                   # Agar log waktu sesuai WIB
+      # Opsional: Jika ingin override model default (tergantung support opencode)
+      # - OPENCODE_MODEL=gemini-2.0-flash
+
+    # VOLUME (SANGAT PENTING!)
+    # Ini memastikan file login 'token.json' tidak hilang saat container direstart/redeploy.
+    # Path sebelah kanan (:...) harus SAMA PERSIS dengan ENV di Dockerfile.
+    volumes:
+      - opencode_data:/app/data
+      - opencode_config:/app/config
+      - opencode_cache:/app/cache
+
+    # Opsional: Agar terminal di dalam container responsif saat debugging manual
+    tty: true
+    stdin_open: true
+
+# Definisi Volume
+volumes:
+  opencode_data:
+  opencode_config:
+  opencode_cache:
