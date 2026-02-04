@@ -32,6 +32,9 @@ RUN pip install --no-cache-dir git+https://github.com/banteg/takopi.git
 
 # 5. Install Opencode CLI
 RUN npm install -g opencode-ai@latest
+# 5a. Install PI coding agent
+RUN npm install -g @mariozechner/pi-coding-agent
+
 
 # 6. Install Plugin Auth Antigravity (FIXED)
 # Kita HAPUS "bun run build" karena script itu tidak ada di repo plugin.
